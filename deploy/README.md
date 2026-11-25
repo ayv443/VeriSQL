@@ -22,32 +22,32 @@ hf repos create SwordVer/verisql-adapters --repo-type model --public
 hf upload SwordVer/verisql-adapters deploy/build/adapters . --repo-type model
 ```
 
-## 2. Free demo Space (replay, CPU) → `SwordVer/verisql`
+## 2. Demo Space on ZeroGPU → `SwordVer/verisql` (what is live)
+
+Since late 2026, free accounts can no longer host Gradio Spaces on the CPU tier (`402 Payment Required`),
+but a free account in good standing (verified email, older than 30 days) can still host up to 2 ZeroGPU
+Spaces. Visitors use their own daily GPU quota: about 2 minutes logged out, 3.5 to 5 minutes with a free
+account, more with PRO. Each generation asks for at most 30 s (`spaces.GPU(duration=30)` in
+`verisql/app.py`), and one question is 1 to 3 generations.
 
 ```bash
-python deploy/build_space.py --mode replay        # -> deploy/build/space-replay (about 210 MB, databases included)
-hf repos create SwordVer/verisql --repo-type space --space-sdk gradio --flavor cpu-basic --public
-hf upload SwordVer/verisql deploy/build/space-replay . --repo-type space
-```
-
-The page says clearly that it is a replay of saved outputs. It runs on the free CPU tier and sleeps after
-48 hours without visitors (it wakes up on the next visit).
-
-## 3. Live model on ZeroGPU (optional upgrade of the same Space)
-
-ZeroGPU rules (checked November 2026): a free account in good standing (verified email, older than 30 days)
-can host up to 2 ZeroGPU Spaces. Visitors use their own daily GPU quota: about 2 minutes unauthenticated,
-3.5 to 5 minutes with a free account, more with PRO. Each generation here asks for at most 30 s
-(`spaces.GPU(duration=30)` in `verisql/app.py`), and one question is 1 to 3 generations, so a free
-visitor gets a few questions a day.
-
-```bash
-python deploy/build_space.py --mode zerogpu
+python deploy/build_space.py --mode zerogpu       # -> deploy/build/space-zerogpu (about 210 MB, databases included)
+find deploy/build/space-zerogpu -name .DS_Store -delete
+hf repos create SwordVer/verisql --repo-type space --space-sdk gradio --flavor zero-a10g --public
 hf upload SwordVer/verisql deploy/build/space-zerogpu . --repo-type space
 ```
 
-Then on the Space page: Settings → Space hardware → **ZeroGPU** → save. If ZeroGPU is not offered for your
-account, keep the replay Space; nothing else changes.
+The first start installs torch and downloads the base model and the adapters (a few minutes). Two things
+ZeroGPU needs, both handled in `verisql/app.py`: build the model on the CPU and move it to the GPU once at
+startup (weights cannot be loaded straight onto the GPU), and pass only text to the `@spaces.GPU`
+function (its arguments are copied to a separate GPU worker). If the GPU does not answer within 60 s the
+page shows the model's saved answer from our evaluation run and says so.
+
+## 3. Replay-only Space (no GPU)
+
+`python deploy/build_space.py --mode replay` builds the same page answering only from the saved runs. It
+needs a CPU Space, which now requires Hugging Face PRO; locally it runs with
+`python verisql/app.py --replay`.
 
 ## Where the URLs end up
 

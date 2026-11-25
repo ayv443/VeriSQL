@@ -28,7 +28,7 @@ def db_file(db_id):
     return os.path.join(FIXTURES, db_id, f"{db_id}.sqlite")
 
 
-def evaluate(engine, items):
+def evaluate(engine, items, progress=False):
     per_q = []
     for it in items:
         db = db_file(it["db_id"])
@@ -41,6 +41,8 @@ def evaluate(engine, items):
         per_q.append({"qid": it["qid"], "correct": correct, "error": res["error"], "turns_used": res["turns_used"],
                       "fixed_errors": res["fixed_errors"], "first_turn_error": res["turns"][0]["error"],
                       "latency_s": round(latency, 3), "final_sql": res["final_sql"]})
+        if progress:
+            print(json.dumps(per_q[-1]), file=sys.stderr, flush=True)
     return per_q
 
 
@@ -71,7 +73,7 @@ def main():
 
     items = json.load(open(os.path.join(HERE, "eval_set.json")))["questions"][:args.limit]
     engine = core.make_engine(args.engine, args.adapter, args.subfolder, args.dtype)
-    per_q = evaluate(engine, items)
+    per_q = evaluate(engine, items, progress=args.engine != "replay")
     report = summarise(per_q, engine)
     os.makedirs(os.path.join(HERE, "reports"), exist_ok=True)
     name = args.engine + (f"-{args.dtype}" if args.dtype else "")

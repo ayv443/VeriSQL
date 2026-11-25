@@ -6,6 +6,11 @@ A small open model (Qwen2.5-Coder-1.5B-Instruct with a LoRA adapter) trained wit
 where the database itself is the judge. It runs on a single NVIDIA T4 next to your data, opens every
 database read-only, and fixes its own query when the database reports an error.
 
+**[Live demo](https://huggingface.co/spaces/SwordVer/verisql)** (the real model on a free shared GPU; if the
+GPU is busy it shows the model's saved answer and says so) ·
+**[Adapters on the Hugging Face Hub](https://huggingface.co/SwordVer/verisql-adapters)** ·
+**[All results](RESULTS.md)**
+
 <p align="center">
   <img src="docs/media/verisql-demo.gif" alt="VeriSQL answering a question: it writes a query, the database reports an error, it fixes the query and keeps the checked answer" width="820">
 </p>
