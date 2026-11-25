@@ -171,15 +171,17 @@ class LiveEngine(Engine):
                 return args.adapters_repo, {"subfolder": HUB_SUBFOLDERS[name]}
             return getattr(args, name), {}
 
+        # build the whole model on the CPU, then move it once: ZeroGPU only allows .to("cuda") at startup,
+        # not loading weights straight onto the GPU
         path, kw = source("verisql")
-        self.model = PeftModel.from_pretrained(base.to(self.device), path, adapter_name="verisql", **kw)
+        self.model = PeftModel.from_pretrained(base, path, adapter_name="verisql", torch_device="cpu", **kw)
         self.available = {"verisql", "untrained"}
         for name in ["dpo", "rloo"]:
             if args.adapters_repo or getattr(args, name):
                 path, kw = source(name)
-                self.model.load_adapter(path, adapter_name=name, **kw)
+                self.model.load_adapter(path, adapter_name=name, torch_device="cpu", **kw)
                 self.available.add(name)
-        self.model.eval()
+        self.model = self.model.to(self.device).eval()
 
     def generate(self, name, messages):
         return _live_generate(self, name, messages)
