@@ -1,0 +1,516 @@
+{
+ "summary": {
+  "engine": "live",
+  "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct + text2sql-rl/data/adapters/mt/mt-grpo-1.5b-s0/checkpoint-150 on cpu (bfloat16)",
+  "questions": 50,
+  "accuracy": 0.7,
+  "final_error_rate": 0.04,
+  "first_turn_error_rate": 0.08,
+  "errors_fixed": 2,
+  "mean_turns": 2.06,
+  "latency_median_s": 27.383,
+  "latency_p95_s": 83.163
+ },
+ "per_question": [
+  {
+   "qid": "spider_dev_41",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 35.5,
+   "final_sql": "SELECT T1.Name, T1.Location FROM stadium AS T1 WHERE T1.Stadium_ID IN (SELECT Stadium_ID FROM concert WHERE YEAR = '2014') INTERSECT SELECT T1.Name, T1.Location FROM stadium AS T1 WHERE T1.Stadium_ID IN (SELECT Stadium_ID FROM concert WHERE YEAR = '2015')"
+  },
+  {
+   "qid": "spider_dev_75",
+   "correct": false,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 21.032,
+   "final_sql": "SELECT T1.Fname, T1.Age FROM Student AS T1 INNER JOIN Has_Pet AS T2 ON T1.StuID = T2.StuID"
+  },
+  {
+   "qid": "spider_dev_97",
+   "correct": false,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 28.922,
+   "final_sql": "SELECT Model FROM model_list WHERE Model IN (SELECT Model FROM cars_data WHERE Weight < (SELECT AVG(Weight) FROM cars_data))"
+  },
+  {
+   "qid": "spider_dev_101",
+   "correct": false,
+   "error": "no such column: T1.Year",
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": "no such column: T1.Year",
+   "latency_s": 36.385,
+   "final_sql": "SELECT T1.Make, T1.Year FROM car_names AS T1 INNER JOIN cars_data AS T2 ON T1.MakeId = T2.Id ORDER BY T2.Year ASC LIMIT 1"
+  },
+  {
+   "qid": "spider_dev_103",
+   "correct": false,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 40.28,
+   "final_sql": "SELECT DISTINCT Model FROM model_list WHERE Maker IN (SELECT Id FROM car_makers WHERE Country = '1' AND FullName LIKE '%USA%') AND Model IN (SELECT Model FROM cars_data WHERE Year > 1980)"
+  },
+  {
+   "qid": "spider_dev_142",
+   "correct": false,
+   "error": null,
+   "turns_used": 3,
+   "fixed_errors": 1,
+   "first_turn_error": "no such column: Make",
+   "latency_s": 35.82,
+   "final_sql": "SELECT Model FROM model_list GROUP BY Model ORDER BY COUNT(*) DESC LIMIT 1"
+  },
+  {
+   "qid": "spider_dev_143",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 19.463,
+   "final_sql": "SELECT COUNT(*) FROM cars_data WHERE Cylinders > 4"
+  },
+  {
+   "qid": "spider_dev_150",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 29.938,
+   "final_sql": "SELECT FullName, Id FROM car_makers WHERE Id IN (SELECT Maker FROM model_list GROUP BY Maker HAVING COUNT(*) > 3)"
+  },
+  {
+   "qid": "spider_dev_223",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 19.238,
+   "final_sql": "SELECT T1.City FROM airports AS T1 JOIN flights AS T2 ON T1.AirportCode = T2.SourceAirport GROUP BY T1.City ORDER BY COUNT(*) DESC LIMIT 1"
+  },
+  {
+   "qid": "spider_dev_256",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 24.369,
+   "final_sql": "SELECT COUNT(*) FROM flights WHERE DestAirport IN (SELECT AirportCode FROM airports WHERE City = 'Aberdeen' OR City = 'Abilene')"
+  },
+  {
+   "qid": "spider_dev_265",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 21.87,
+   "final_sql": "SELECT city FROM employee WHERE age < 30 GROUP BY city HAVING count(*) > 1"
+  },
+  {
+   "qid": "spider_dev_288",
+   "correct": false,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 25.333,
+   "final_sql": "SELECT s.Name, COUNT(e.Employee_ID) FROM employee AS e JOIN hiring AS h ON e.Employee_ID = h.Employee_ID JOIN shop AS s ON h.Shop_ID = s.Shop_ID GROUP BY s.Name"
+  },
+  {
+   "qid": "spider_dev_310",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 33.443,
+   "final_sql": "SELECT T1.Template_ID, COUNT(*) FROM Documents AS T1 INNER JOIN Templates AS T2 ON T1.Template_ID = T2.Template_ID GROUP BY T1.Template_ID"
+  },
+  {
+   "qid": "spider_dev_317",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 13.447,
+   "final_sql": "SELECT count(*) FROM Templates"
+  },
+  {
+   "qid": "spider_dev_323",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 25.213,
+   "final_sql": "SELECT Template_ID FROM Templates WHERE Template_Type_Code = 'PP' OR Template_Type_Code = 'PPT'"
+  },
+  {
+   "qid": "spider_dev_338",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 37.401,
+   "final_sql": "SELECT T1.Template_Type_Code FROM Templates AS T1 INNER JOIN Documents AS T2 ON T1.Template_ID = T2.Template_ID WHERE T2.Document_Name = 'Data base'"
+  },
+  {
+   "qid": "spider_dev_362",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 34.857,
+   "final_sql": "SELECT T1.Other_Details FROM Paragraphs AS T1 INNER JOIN Documents AS T2 ON T1.Document_ID = T2.Document_ID WHERE T1.Paragraph_Text LIKE '%Korea%'"
+  },
+  {
+   "qid": "spider_dev_366",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 26.717,
+   "final_sql": "SELECT T1.Paragraph_Text FROM Paragraphs AS T1 INNER JOIN Documents AS T2 ON T1.Document_ID = T2.Document_ID WHERE T2.Document_Name = 'Customer reviews'"
+  },
+  {
+   "qid": "spider_dev_394",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 18.379,
+   "final_sql": "SELECT hometown ,  count(*) FROM teacher GROUP BY hometown"
+  },
+  {
+   "qid": "spider_dev_414",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 18.593,
+   "final_sql": "SELECT Name, Level_of_membership FROM visitor WHERE Level_of_membership > 4 ORDER BY Age DESC"
+  },
+  {
+   "qid": "spider_dev_492",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 20.492,
+   "final_sql": "SELECT name ,  tonnage FROM ship ORDER BY name DESC"
+  },
+  {
+   "qid": "spider_dev_506",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 18.476,
+   "final_sql": "SELECT note FROM death WHERE note LIKE '%East%'"
+  },
+  {
+   "qid": "spider_dev_545",
+   "correct": false,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 82.966,
+   "final_sql": "SELECT T1.course_name FROM Courses AS T1 INNER JOIN Student_Enrolment_Courses AS T2 ON T1.course_id = T2.course_id INNER JOIN Student_Enrolment AS T3 ON T2.student_enrolment_id = T3.student_enrolment_id"
+  },
+  {
+   "qid": "spider_dev_550",
+   "correct": false,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 83.163,
+   "final_sql": "SELECT T1.last_name FROM Students AS T1 INNER JOIN Addresses AS T2 ON T1.current_address_id = T2.address_id WHERE T2.state_province_county = 'North Carolina' AND T1.student_id NOT IN (SELECT student_id FROM Student_Enrolment)"
+  },
+  {
+   "qid": "spider_dev_559",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 75.394,
+   "final_sql": "SELECT T1.first_name FROM Students AS T1 INNER JOIN Addresses AS T2 ON T1.permanent_address_id = T2.address_id WHERE T1.current_address_id != T2.address_id"
+  },
+  {
+   "qid": "spider_dev_578",
+   "correct": false,
+   "error": null,
+   "turns_used": 3,
+   "fixed_errors": 1,
+   "first_turn_error": "no such column: address_id",
+   "latency_s": 79.479,
+   "final_sql": "SELECT DISTINCT permanent_address_id FROM Students"
+  },
+  {
+   "qid": "spider_dev_585",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 18.587,
+   "final_sql": "SELECT Title FROM Cartoon ORDER BY Title"
+  },
+  {
+   "qid": "spider_dev_607",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 20.93,
+   "final_sql": "SELECT Language ,  COUNT(*) FROM TV_Channel GROUP BY Language"
+  },
+  {
+   "qid": "spider_dev_635",
+   "correct": false,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 25.335,
+   "final_sql": "SELECT Country FROM TV_Channel WHERE id NOT IN (SELECT Channel FROM Cartoon WHERE Written_by = 'Todd Casey')"
+  },
+  {
+   "qid": "spider_dev_659",
+   "correct": false,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 11.982,
+   "final_sql": "SELECT Name FROM people"
+  },
+  {
+   "qid": "spider_dev_678",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 18.385,
+   "final_sql": "SELECT Nationality FROM people GROUP BY Nationality HAVING COUNT(*) >= 2"
+  },
+  {
+   "qid": "spider_dev_695",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 39.71,
+   "final_sql": "SELECT T1.contestant_number, T1.contestant_name FROM CONTESTANTS AS T1 INNER JOIN VOTES AS T2 ON T1.contestant_number = T2.contestant_number GROUP BY T1.contestant_number ORDER BY COUNT(*) ASC LIMIT 1"
+  },
+  {
+   "qid": "spider_dev_762",
+   "correct": false,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 28.049,
+   "final_sql": "SELECT T1.Name, T1.Population, T1.LifeExpectancy FROM country AS T1 INNER JOIN country AS T2 ON T1.Code = T2.Code WHERE T2.Region = 'Asia' ORDER BY T2.SurfaceArea DESC LIMIT 1"
+  },
+  {
+   "qid": "spider_dev_784",
+   "correct": false,
+   "error": "no such column: Code",
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": "no such column: Code",
+   "latency_s": 35.103,
+   "final_sql": "SELECT Name FROM city WHERE CountryCode IN (SELECT Code FROM country WHERE Region = 'Europe') AND Code NOT IN (SELECT CountryCode FROM countrylanguage WHERE Language = 'English')"
+  },
+  {
+   "qid": "spider_dev_809",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 48.342,
+   "final_sql": "SELECT Name FROM country WHERE Code IN (SELECT CountryCode FROM countrylanguage WHERE Language = 'English' AND Percentage = 100) INTERSECT SELECT Name FROM country WHERE Continent = 'Europe' AND Population = 80000"
+  },
+  {
+   "qid": "spider_dev_835",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 18.589,
+   "final_sql": "SELECT count(DISTINCT Nationality) FROM conductor"
+  },
+  {
+   "qid": "spider_dev_838",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 17.304,
+   "final_sql": "SELECT Name FROM conductor ORDER BY Year_of_Work DESC LIMIT 1"
+  },
+  {
+   "qid": "spider_dev_864",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 12.69,
+   "final_sql": "SELECT name, grade FROM Highschooler"
+  },
+  {
+   "qid": "spider_dev_880",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 18.927,
+   "final_sql": "SELECT grade FROM Highschooler GROUP BY grade HAVING COUNT(*) >= 4"
+  },
+  {
+   "qid": "spider_dev_891",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 25.789,
+   "final_sql": "SELECT name FROM Highschooler WHERE ID IN (SELECT friend_id FROM Friend WHERE student_id = (SELECT ID FROM Highschooler WHERE name = 'Kyle'))"
+  },
+  {
+   "qid": "spider_dev_911",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 18.054,
+   "final_sql": "SELECT name FROM Highschooler WHERE grade > 5 AND ID IN (SELECT student_id FROM Friend GROUP BY student_id HAVING COUNT(*) >= 2)"
+  },
+  {
+   "qid": "spider_dev_926",
+   "correct": false,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 73.806,
+   "final_sql": "SELECT DISTINCT first_name FROM Owners WHERE first_name NOT IN (SELECT first_name FROM Dogs)"
+  },
+  {
+   "qid": "spider_dev_932",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 85.098,
+   "final_sql": "SELECT p.professional_id, p.role_code, p.first_name FROM Professionals AS p JOIN Treatments AS t ON p.professional_id = t.professional_id GROUP BY p.professional_id HAVING COUNT(*) >= 2"
+  },
+  {
+   "qid": "spider_dev_973",
+   "correct": false,
+   "error": null,
+   "turns_used": 3,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 105.422,
+   "final_sql": "Select first_name ,  last_name ,  email_address FROM Owners WHERE city LIKE '%North%' LIMIT 1"
+  },
+  {
+   "qid": "spider_dev_975",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 63.793,
+   "final_sql": "SELECT COUNT(*) FROM Dogs WHERE CAST(age AS REAL) < (SELECT AVG(CAST(age AS REAL)) FROM Dogs)"
+  },
+  {
+   "qid": "spider_dev_982",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 59.005,
+   "final_sql": "SELECT COUNT(*) FROM Professionals WHERE professional_id NOT IN (SELECT professional_id FROM Treatments)"
+  },
+  {
+   "qid": "spider_dev_985",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 58.012,
+   "final_sql": "SELECT name, age, weight FROM Dogs WHERE abandoned_yn = '1'"
+  },
+  {
+   "qid": "spider_dev_991",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 55.873,
+   "final_sql": "SELECT charge_type ,  charge_amount FROM Charges"
+  },
+  {
+   "qid": "spider_dev_993",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 57.319,
+   "final_sql": "SELECT MAX(charge_amount) FROM Charges"
+  },
+  {
+   "qid": "spider_dev_1002",
+   "correct": true,
+   "error": null,
+   "turns_used": 2,
+   "fixed_errors": 0,
+   "first_turn_error": null,
+   "latency_s": 18.012,
+   "final_sql": "SELECT Name FROM singer ORDER BY Net_Worth_Millions ASC"
+  }
+ ]
+}
