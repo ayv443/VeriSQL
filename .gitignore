@@ -1,0 +1,84 @@
+# ============ Python ============
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+venv/
+.venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# ============ Jupyter ============
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ============ Data: never commit ============
+data/
+*.sqlite
+*.sqlite3
+*.db
+*.csv
+*.tsv
+*.jsonl
+*.zip
+*.tar.gz
+
+# ============ Model weights and checkpoints ============
+checkpoints/
+adapters/
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+
+# ============ Experiment output ============
+results/
+runs/
+wandb/
+lightning_logs/
+*.log
+
+# ============ Caches ============
+.cache/
+hf_cache/
+.ray/
+ray_results/
+
+# ============ SageMaker / EBS ============
+.sagemaker/
+lost+found/
+
+# ============ Secrets ============
+.env
+.env.*
+*.pem
+*.key
+aws_credentials*
+.aws/
+
+# ============ OS and editor ============
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ============ Exceptions: small summary tables DO get committed ============
+!results/summary/
+!results/summary/*.csv
+!configs/*.yaml
+
+# ============ Exceptions: the fixed eval set ships its small Spider databases (CC BY-SA 4.0) ============
+!eval/fixtures/**/*.sqlite
+eval/reports/
+
+# Hugging Face upload folders (built by deploy/build_space.py)
+deploy/build/

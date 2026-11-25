@@ -1,0 +1,10 @@
+run: mt-rloo-1.5b-s0
+method: rloo | start adapter: /home/sagemaker-user/Marl-SQL/text2sql-rl/outputs/rloo-1.5b-s0/checkpoint-600 | max steps: 150
+steps logged: 150 | last step: 150 | total time: 2.13 h | avg s/step: 51.1
+checkpoints: checkpoint-50, checkpoint-100, checkpoint-150
+  checkpoint-50 sha256: 7abc4d50bca7bb8203db3d7d347ddc3816203dabec4e7c15392f780549551126
+  checkpoint-100 sha256: 255352f5e98b2b78d16ae40cf3e9a52e46178dbdc43bf8146b72e774ac854595
+  checkpoint-150 sha256: 5d21d1cafc46cd315c18eb2f86745b9496b2bd7403cd1a9519a4744d1235f759
+studio space: RL-56-PJT | user profile: <user-profile> | domain: <studio-domain>
+aws: <redacted-arn>
+versions: accelerate==1.10.1 datasets==4.0.0 peft==0.17.1 torch==2.8.0 transformers==4.56.2 trl==0.24.0 vllm==0.10.2

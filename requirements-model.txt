@@ -1,0 +1,8 @@
+# Adds the real model (live engine). Same versions as training.
+-r requirements-service.txt
+transformers==4.56.2
+peft==0.17.1
+accelerate==1.10.1
+huggingface_hub>=0.34,<1.0
+# torch: install the build for your machine first (CPU: --index-url https://download.pytorch.org/whl/cpu)
+torch==2.8.0

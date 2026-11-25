@@ -1,0 +1,2 @@
+-rw-------. 1 sagemaker-user users 73911112 2026-10-22 07:39:56.639335445 +0000 adapter_model.safetensors
+7abc4d50bca7bb8203db3d7d347ddc3816203dabec4e7c15392f780549551126  adapter_model.safetensors

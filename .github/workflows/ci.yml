@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      - name: Unit and API tests (guardrails, self-check loop, HTTP contract, replay = original evaluation)
+        run: python -m pytest -q tests
+      - name: Eval suite (replay of the saved MT-GRPO outputs, 50 Spider dev questions)
+        run: python eval/run_eval.py --engine replay --min-accuracy 0.66
+      - uses: actions/upload-artifact@v4
+        with:
+          name: eval-report
+          path: eval/reports/replay.json
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t verisql .
+      - name: Smoke test the container
+        run: |
+          docker run -d --name api -p 8000:8000 verisql
+          for i in $(seq 1 30); do curl -sf localhost:8000/health && break; sleep 1; done
+          curl -sf -X POST localhost:8000/query -H 'content-type: application/json' \
+            -d '{"question": "Show the names of singers and the total sales of their songs.", "db": "singer"}' \
+            | python -c "import sys, json; d = json.load(sys.stdin); assert d['error'] is None and d['row_count'] == 6, d; print(d['sql'])"

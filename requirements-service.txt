@@ -1,0 +1,4 @@
+# API + evaluation without a model (replay engine). Python 3.11+
+fastapi==0.115.12
+uvicorn[standard]==0.34.2
+pydantic==2.11.4

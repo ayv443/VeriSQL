@@ -1,0 +1,10 @@
+run: mt-grpo-1.5b-s0
+method: grpo | start adapter: /home/sagemaker-user/Marl-SQL/text2sql-rl/outputs/grpo-1.5b-s0/checkpoint-400 | max steps: 150
+steps logged: 150 | last step: 150 | total time: 2.18 h | avg s/step: 52.4
+checkpoints: checkpoint-50, checkpoint-100, checkpoint-150
+  checkpoint-50 sha256: 270401d516e5bf70ab7adaf49f8460f24597a23b50ca57ff076f2709c6569884
+  checkpoint-100 sha256: da1253764e4c76861b14f51a71a01db0e28f7b158c6ef807ba01b62572917139
+  checkpoint-150 sha256: fa41692b3046019ba4c4ff9404655624559c3876fabaaa5059e2f966539b92bf
+studio space: Project-RL | user profile: <user-profile> | domain: <studio-domain>
+aws: aws cli not available
+versions: accelerate==1.10.1 datasets==4.0.0 peft==0.17.1 torch==2.8.0 transformers==4.56.2 trl==0.24.0 vllm==0.10.2
