@@ -203,7 +203,9 @@ class LiveEngine(Engine):
             print(f"[verisql] live generation failed or timed out ({type(e).__name__}: {e})")
             saved = self.fallback.generate(name, messages) if self.fallback and not self.used_live else None
             if saved is None:  # no saved answer, or live turns already happened (never mix the two)
-                raise gr.Error("The shared GPU is busy right now. Please try again in a minute.")
+                raise gr.Error("The live model runs on Hugging Face's free shared GPU, which needs you to be logged in "
+                               "to Hugging Face (free) and has a small daily quota per visitor. Log in and try again, or "
+                               "pick one of the example questions, which work without logging in.")
             self.fell_back = True
             return saved
 
@@ -480,8 +482,9 @@ def self_check(db, question):
         err = run_and_log("Ran the fixed query" if fixed_errors else "Ran the revised query", "Ran it again")
 
     if getattr(ENGINE, "fell_back", False):
-        steps.append({"icon": "warn", "text": "The shared GPU was busy, so this shows the model's saved answer from "
-                                              "our evaluation run (same model, same loop)", "time": ""})
+        steps.append({"icon": "warn", "text": "The live GPU was not available (logged out, daily quota used, or busy), so "
+                                              "this is the model's saved answer from our evaluation run: same model, same loop",
+                      "time": ""})
     final = attempts[-1]
     match = None
     if ex:
@@ -841,7 +844,7 @@ def build():
             if ENGINE.mode == "replay":
                 note += " Answers are the saved outputs from our evaluation runs."
             elif any_saved:
-                note += " The shared GPU was busy, so some answers are the saved outputs from our evaluation runs."
+                note += " The live GPU was not available, so some answers are the saved outputs from our evaluation runs."
             yield gr.HTML(value=compare_html(cards, note), visible=True), "compare"
 
         b_checked.click(show_checked, [last, panel_open], [panel, panel_open])
