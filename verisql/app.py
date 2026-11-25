@@ -17,6 +17,8 @@
 #                                    BIRD dev questions only); the databases are still queried live
 #   python verisql/app.py --test     the small untrained 0.5B model on CPU, only to check that the app works
 import argparse
+import concurrent.futures
+import contextvars
 import csv
 import difflib
 import html
@@ -183,12 +185,38 @@ class LiveEngine(Engine):
                 self.available.add(name)
         self.model = self.model.to(self.device).eval()
 
+        self.fallback = None  # a ReplayEngine, set in main() when the saved runs are available
+        self.fell_back = self.used_live = False  # reset at the start of every question
+
     def generate(self, name, messages):
-        return _live_generate(self, name, messages)
+        """Live answer, or, if the shared GPU does not answer within FALLBACK_AFTER_S (queue, daily quota,
+        ZeroGPU error), the model's saved answer from our evaluation run, flagged so the page can say so."""
+        if self.fell_back:  # once a question has fallen back, every later turn is the saved one too
+            return self.fallback.generate(name, messages)
+        ctx = contextvars.copy_context()  # keeps the visitor's ZeroGPU identity (quota) in the worker thread
+        future = _POOL.submit(ctx.run, _live_generate, name, messages)
+        try:
+            out = future.result(timeout=FALLBACK_AFTER_S)
+            self.used_live = True
+            return out
+        except Exception as e:
+            print(f"[verisql] live generation failed or timed out ({type(e).__name__}: {e})")
+            saved = self.fallback.generate(name, messages) if self.fallback and not self.used_live else None
+            if saved is None:  # no saved answer, or live turns already happened (never mix the two)
+                raise gr.Error("The shared GPU is busy right now. Please try again in a minute.")
+            self.fell_back = True
+            return saved
 
 
+FALLBACK_AFTER_S = 60
+_POOL = concurrent.futures.ThreadPoolExecutor(max_workers=4)
+
+
+# On ZeroGPU this runs in a separate GPU worker and its arguments are copied there, so it takes only text and
+# reads the model from the module-level ENGINE (never pass the 3 GB model as an argument).
 @on_gpu
-def _live_generate(engine, name, messages):
+def _live_generate(name, messages):
+    engine = ENGINE
     text = engine.tok.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     enc = engine.tok(text, return_tensors="pt").to(engine.device)
     with engine.torch.no_grad():
@@ -396,6 +424,9 @@ def self_check(db, question):
     prompt = build_prompt(info["path"], question, ex["evidence"] if ex else "")
     if isinstance(ENGINE, ReplayEngine):
         ENGINE.current_db = db
+    if getattr(ENGINE, "fallback", None):
+        ENGINE.fallback.current_db = db
+        ENGINE.fell_back = ENGINE.used_live = False
     steps, attempts = [], []
     gen_time = (lambda dt: "") if ENGINE.mode == "replay" else secs
 
@@ -448,6 +479,9 @@ def self_check(db, question):
         yield ("progress", steps, "Running the fixed query…" if err else "Running the revised query…")
         err = run_and_log("Ran the fixed query" if fixed_errors else "Ran the revised query", "Ran it again")
 
+    if getattr(ENGINE, "fell_back", False):
+        steps.append({"icon": "warn", "text": "The shared GPU was busy, so this shows the model's saved answer from "
+                                              "our evaluation run (same model, same loop)", "time": ""})
     final = attempts[-1]
     match = None
     if ex:
@@ -762,7 +796,7 @@ def build():
             info = DBS[res["db"]]
             gold = res["ex"]["gold_sql"] if res.get("ex") else None
             gold_rows = execute(info["path"], gold, timeout=30)[0] if gold else None
-            cards = []
+            cards, any_saved = [], False
             for key, name, sub in COMPARE:
                 if key == "verisql":
                     final = res["final"]
@@ -783,7 +817,11 @@ def build():
                 if key not in ENGINE.available:
                     cards.append({"key": key, "name": name, "sub": "not loaded", "badge": "–", "tone": "plain", "sql": None})
                     continue
+                if getattr(ENGINE, "fallback", None):  # each comparison answer is one turn: live or saved, per model
+                    ENGINE.fallback.current_db = res["db"]
+                    ENGINE.fell_back = ENGINE.used_live = False
                 out = ENGINE.generate(key, res["prompt"])
+                any_saved = any_saved or getattr(ENGINE, "fell_back", False)
                 if out is None:
                     cards.append({"key": key, "name": name, "sub": "no saved answer", "badge": "–", "tone": "plain", "sql": None})
                     continue
@@ -802,6 +840,8 @@ def build():
                 ("This question has no stored correct answer, so the answers are shown as ran or SQL error only.")
             if ENGINE.mode == "replay":
                 note += " Answers are the saved outputs from our evaluation runs."
+            elif any_saved:
+                note += " The shared GPU was busy, so some answers are the saved outputs from our evaluation runs."
             yield gr.HTML(value=compare_html(cards, note), visible=True), "compare"
 
         b_checked.click(show_checked, [last, panel_open], [panel, panel_open])
@@ -862,6 +902,7 @@ def main():
         if not (args.verisql or args.adapters_repo):
             ap.error("--verisql <adapter> or --adapters-repo <hub repo> is needed (or use --replay / --test)")
         ENGINE = LiveEngine(args)
+        ENGINE.fallback = ReplayEngine()  # used only if the shared GPU does not answer in time
     if not DBS:
         print(f"No databases found under {DATA_DIR}: run text2sql-rl/download_data.sh and prepare_data.py first.")
     demo = build()
