@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.join(ROOT, "text2sql-rl"))
 from common import DATA_DIR, PROCESSED_DIR, load_jsonl  # noqa: E402
 
 BUILD = os.path.join(ROOT, "deploy", "build")
-HUB_REPO = "ayv443/verisql-adapters"
+HUB_REPO = "SwordVer/verisql-adapters"
 # BIRD dev databases small enough for a Space (the other four are 69 to 571 MB)
 BIRD_DBS = {"superhero", "student_club", "toxicology", "thrombosis_prediction", "california_schools",
             "formula_1", "debit_card_specializing"}

@@ -5,7 +5,7 @@
 # With the real model on CPU (about 3 GB more), adapters pulled from the Hugging Face Hub at startup:
 #   docker build -t verisql:model --build-arg WITH_MODEL=1 .
 #   docker run --rm -p 8000:8000 -e VERISQL_ENGINE=live \
-#       -e VERISQL_ADAPTER=ayv443/verisql-adapters -e VERISQL_SUBFOLDER=mt-grpo-step150 verisql:model
+#       -e VERISQL_ADAPTER=SwordVer/verisql-adapters -e VERISQL_SUBFOLDER=mt-grpo-step150 verisql:model
 FROM python:3.11-slim
 
 ARG WITH_MODEL=0

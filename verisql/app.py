@@ -8,7 +8,7 @@
 # Run from the repository root, on a GPU (T4):
 #   python verisql/app.py --verisql <mt-grpo-1.5b-s0/checkpoint-150> \
 #       --dpo <dpo-1.5b-s0/checkpoint-100> --rloo <rloo-1.5b-s0/checkpoint-600> --share
-#   python verisql/app.py --adapters-repo ayv443/verisql-adapters      (adapters from the Hugging Face Hub)
+#   python verisql/app.py --adapters-repo SwordVer/verisql-adapters      (adapters from the Hugging Face Hub)
 # --dpo and --rloo are only used by "Compare models" and can be left out. Without CUDA it runs on Apple MPS
 # or the CPU (slower); on a Hugging Face ZeroGPU Space each generation gets a GPU for up to 30 s.
 #
@@ -846,7 +846,7 @@ def main():
     ap.add_argument("--verisql", help="multi-turn GRPO adapter (mt-grpo-1.5b-s0/checkpoint-150)")
     ap.add_argument("--dpo", help="DPO adapter, for Compare models (optional)")
     ap.add_argument("--rloo", help="RLOO adapter, for Compare models (optional)")
-    ap.add_argument("--adapters-repo", help="Hugging Face Hub repo with all adapters, e.g. ayv443/verisql-adapters")
+    ap.add_argument("--adapters-repo", help="Hugging Face Hub repo with all adapters, e.g. SwordVer/verisql-adapters")
     ap.add_argument("--replay", action="store_true", help="answer from the saved evaluation runs (no GPU)")
     ap.add_argument("--test", action="store_true", help="small untrained model on CPU, only to test the app")
     ap.add_argument("--share", action="store_true", help="public gradio.live link")

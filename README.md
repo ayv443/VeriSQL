@@ -83,7 +83,7 @@ The response has the final SQL, the rows, and every self-check turn (the first q
 `no such column: s.Sales`, the model fixes it, then keeps it). Without a GPU the image uses the **replay
 engine** (the model's saved outputs from our evaluation, databases queried live). For the real model set
 `VERISQL_ENGINE=live` and point `VERISQL_ADAPTER` at a checkpoint or the Hub repo
-([`ayv443/verisql-adapters`](https://huggingface.co/ayv443/verisql-adapters)); it uses CUDA, Apple MPS or
+([`SwordVer/verisql-adapters`](https://huggingface.co/SwordVer/verisql-adapters)); it uses CUDA, Apple MPS or
 the CPU, in that order.
 
 **Guardrails** (`verisql/core.py`): only SELECT/WITH statements, a read-only connection, a SQLite authorizer

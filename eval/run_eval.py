@@ -2,7 +2,7 @@
 
     python eval/run_eval.py --engine replay                                  # no model (CI): saved MT-GRPO outputs
     python eval/run_eval.py --engine live --adapter <checkpoint-150 folder>  # the real model (GPU, Apple MPS or CPU)
-    python eval/run_eval.py --engine live --adapter ayv443/verisql-adapters --subfolder mt-grpo-step150
+    python eval/run_eval.py --engine live --adapter SwordVer/verisql-adapters --subfolder mt-grpo-step150
 
 Scoring is strict execution accuracy, as in the project: the final query's result must equal the gold
 query's result (row order only checked when the gold query has ORDER BY). Prints one JSON report and

@@ -56,7 +56,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 base = "Qwen/Qwen2.5-Coder-1.5B-Instruct"
 tok = AutoTokenizer.from_pretrained(base)
 model = AutoModelForCausalLM.from_pretrained(base)
-model = PeftModel.from_pretrained(model, "ayv443/verisql-adapters", subfolder="mt-grpo-step150")
+model = PeftModel.from_pretrained(model, "SwordVer/verisql-adapters", subfolder="mt-grpo-step150")
 ```
 
 The prompt format (system prompt, schema with example values, `<answer></answer>` tags) and the
